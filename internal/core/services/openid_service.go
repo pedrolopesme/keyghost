@@ -9,19 +9,19 @@ import (
 	"go.uber.org/zap"
 )
 
-type OpenIdGhost struct {
+type NewOpenIdGhostService struct {
 	logger  zap.Logger
 	profile domain.ServerProfile
 }
 
-func NewOpenIdGhost(ctx context.Context, profile domain.ServerProfile) *OpenIdGhost {
-	return &OpenIdGhost{
+func NewNewOpenIdGhostService(ctx context.Context, profile domain.ServerProfile) *NewOpenIdGhostService {
+	return &NewOpenIdGhostService{
 		logger:  ctx.Value("logger").(zap.Logger),
 		profile: profile,
 	}
 }
 
-func (o OpenIdGhost) Wellknown() string {
+func (o NewOpenIdGhostService) Wellknown() string {
 	wellknown, err := json.Marshal(o.profile.Wellknown)
 	if err != nil {
 		o.logger.Error(err.Error())
