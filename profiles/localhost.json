@@ -1,12 +1,13 @@
 {
     "name": "Localhost Profile",
+    "realm" : "demo",
     "wellknown":  {
-        "issuer": "http://localhost:8080/auth/realms/demo",
-        "authorization_endpoint": "http://localhost:8080/auth/realms/demo/protocol/openid-connect/auth",
-        "token_endpoint": "http://localhost:8080/auth/realms/demo/protocol/openid-connect/token",
-        "userinfo_endpoint": "http://localhost:8080/auth/realms/demo/protocol/openid-connect/userinfo",
-        "end_session_endpoint": "http://localhost:8080/auth/realms/demo/protocol/openid-connect/logout",
-        "jwks_uri": "http://localhost:8080/auth/realms/demo/protocol/openid-connect/certs",
+        "issuer": "http://localhost:8080/auth/realms/%s",
+        "authorization_endpoint": "http://localhost:8080/auth/realms/%s/protocol/openid-connect/auth",
+        "token_endpoint": "http://localhost:8080/auth/realms/%s/protocol/openid-connect/token",
+        "userinfo_endpoint": "http://localhost:8080/auth/realms/%s/protocol/openid-connect/userinfo",
+        "end_session_endpoint": "http://localhost:8080/auth/realms/%s/protocol/openid-connect/logout",
+        "jwks_uri": "http://localhost:8080/auth/realms/%s/protocol/openid-connect/certs",
         "grant_types_supported": [
             "authorization_code",
             "refresh_token",
