@@ -28,5 +28,10 @@ func (k *Keyghost) Run() error {
 	openIdRoutes := handlers.NewOpenIdGhostHandlers(k.Ctx, e)
 	openIdRoutes.SetupRoutes()
 
+	err := e.Start(":8080")
+	if err != nil {
+		logger.Error(err.Error())
+		return err
+	}
 	return nil
 }

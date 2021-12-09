@@ -23,5 +23,5 @@ func NewAppContext(logger zap.Logger) *AppContext {
 }
 
 func (app AppContext) Logger() zap.Logger {
-	return app.ctx.Value("CTX_LOGGER").(zap.Logger)
+	return app.ctx.Value(CTX_LOGGER).(zap.Logger)
 }
