@@ -1,7 +1,14 @@
 package main
 
-import "fmt"
+import (
+	"github.com/pedrolopesme/keyghost/cmd"
+	"go.uber.org/zap"
+)
 
 func main() {
-	fmt.Println("Hello")
+	logger, _ := zap.NewProduction()
+	defer logger.Sync()
+
+	keyghost := cmd.NewKeyghost(logger)
+	keyghost.Run()
 }
