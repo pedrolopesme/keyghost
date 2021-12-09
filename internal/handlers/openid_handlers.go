@@ -10,16 +10,14 @@ import (
 )
 
 type OpenIdGhostHandlers struct {
-	ctx           domain.AppContext
-	e             *echo.Echo
-	serverProfile domain.ServerProfile
+	ctx domain.AppContext
+	e   *echo.Echo
 }
 
-func NewOpenIdGhostHandlers(ctx domain.AppContext, e *echo.Echo, serverProfile domain.ServerProfile) *OpenIdGhostHandlers {
+func NewOpenIdGhostHandlers(ctx domain.AppContext, e *echo.Echo) *OpenIdGhostHandlers {
 	return &OpenIdGhostHandlers{
-		ctx:           ctx,
-		e:             e,
-		serverProfile: serverProfile,
+		ctx: ctx,
+		e:   e,
 	}
 }
 
@@ -29,7 +27,7 @@ func (openid OpenIdGhostHandlers) SetupRoutes() {
 
 func (openid OpenIdGhostHandlers) wellknown(c echo.Context) error {
 	realmParam := c.Param("realm")
-	realm := openid.serverProfile.Realm(realmParam)
+	realm := openid.ctx.ServerProfile().Realm(realmParam)
 	if realm == nil {
 		return internal.ErrRealmNotFound
 	}
@@ -39,5 +37,6 @@ func (openid OpenIdGhostHandlers) wellknown(c echo.Context) error {
 		return err
 	}
 
+	c.Response().Header().Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	return c.String(http.StatusOK, string(payloadBytes))
 }
