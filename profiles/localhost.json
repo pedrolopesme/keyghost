@@ -26,6 +26,10 @@
             "response_modes_supported": [
                 "query"
             ]
+        },
+        "authorization" : {
+            "redirect_to": "http://localhost:8080/redirect/callback",
+            "code" : "546c9b63-a5f6-41d4-ae5e-1d4b44914ef7"
         }
     }]
 }
