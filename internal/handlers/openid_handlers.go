@@ -11,6 +11,10 @@ import (
 	"github.com/pedrolopesme/keyghost/internal/core/domain"
 )
 
+const (
+	GRANT_TYPE_AUTHORIZATION = "authorization_code"
+)
+
 type OpenIdGhostHandlers struct {
 	ctx domain.AppContext
 	e   *echo.Echo
@@ -26,6 +30,7 @@ func NewOpenIdGhostHandlers(ctx domain.AppContext, e *echo.Echo) *OpenIdGhostHan
 func (openid OpenIdGhostHandlers) SetupRoutes() {
 	openid.e.GET("/auth/realms/:realm/.well-known/openid-configuration", openid.wellknown)
 	openid.e.GET("/auth/realms/:realm/protocol/openid-connect/auth", openid.authorization)
+	openid.e.POST("/auth/realms/:realm/protocol/openid-connect/token", openid.token)
 	openid.e.GET("/redirect/callback", openid.authorizationCallback)
 }
 
@@ -70,4 +75,27 @@ func (openid OpenIdGhostHandlers) authorization(c echo.Context) error {
 
 func (openid OpenIdGhostHandlers) authorizationCallback(c echo.Context) error {
 	return c.String(http.StatusOK, "ok")
+}
+
+func (openId OpenIdGhostHandlers) token(c echo.Context) error {
+	if c.FormValue("grant_type") == GRANT_TYPE_AUTHORIZATION {
+		return openId.authorizationCode(c)
+	}
+
+	return c.NoContent(http.StatusBadRequest)
+}
+
+func (openId OpenIdGhostHandlers) authorizationCode(c echo.Context) error {
+	realmParam := c.Param("realm")
+	realm := openId.ctx.ServerProfile().Realm(realmParam)
+	if realm == nil {
+		return internal.ErrRealmNotFound
+	}
+
+	if c.FormValue("code") == realm.Token.AuthorizationCode.Code {
+		return c.JSON(http.StatusOK, realm.Token.AuthorizationCode.Response)
+	}
+
+	c.Response().Header().Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+	return c.NoContent(http.StatusNotFound)
 }
