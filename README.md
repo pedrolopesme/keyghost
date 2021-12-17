@@ -1,13 +1,23 @@
 # keyghost
+
 A Keycloak Mock Server
 
 
 
-# Sample Server Profile Routes:
+# Example 
 
-* Wellknown: http://localhost:8080/auth/realms/demo/.well-known/openid-configuration 
-* Authorization: http://localhost:8080/auth/realms/demo/protocol/openid-connect/auth?state=my-state-123
+Based on Sample Server Profile config (`./profiles/localhost.json`):
 
+
+### Wellknown
+```shell
+$ curl http://localhost:8080/auth/realms/demo/.well-known/openid-configuration 
+```
+
+### Authorization Code Flow
+```shell
+$ curl  http://localhost:8080/auth/realms/demo/protocol/openid-connect/auth?state=my-state-123
+```
 ### Exchange Authorization Code to JWT Tokens:
 
 ```shell
