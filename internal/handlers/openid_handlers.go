@@ -9,6 +9,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/pedrolopesme/keyghost/internal"
 	"github.com/pedrolopesme/keyghost/internal/core/domain"
+	"go.uber.org/zap"
 )
 
 const (
@@ -16,11 +17,11 @@ const (
 )
 
 type OpenIdGhostHandlers struct {
-	ctx domain.AppContext
+	ctx *domain.AppContext
 	e   *echo.Echo
 }
 
-func NewOpenIdGhostHandlers(ctx domain.AppContext, e *echo.Echo) *OpenIdGhostHandlers {
+func NewOpenIdGhostHandlers(ctx *domain.AppContext, e *echo.Echo) *OpenIdGhostHandlers {
 	return &OpenIdGhostHandlers{
 		ctx: ctx,
 		e:   e,
@@ -35,10 +36,12 @@ func (openid OpenIdGhostHandlers) SetupRoutes() {
 }
 
 func (openid OpenIdGhostHandlers) wellknown(c echo.Context) error {
+	logger := openid.ctx.Logger()
 	realmParam := c.Param("realm")
 	realm := openid.ctx.ServerProfile().Realm(realmParam)
 	if realm == nil {
-		return internal.ErrRealmNotFound
+		logger.Info("Realm not found", zap.Error(internal.ErrRealmNotFound))
+		return c.NoContent(http.StatusNotFound)
 	}
 
 	payloadBytes, err := json.Marshal(realm.Wellknown)

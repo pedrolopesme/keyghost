@@ -48,7 +48,7 @@ func (k *Keyghost) Run() error {
 
 	// Configure application Routes
 	e := echo.New()
-	openIdRoutes := handlers.NewOpenIdGhostHandlers(k.Ctx, e)
+	openIdRoutes := handlers.NewOpenIdGhostHandlers(&k.Ctx, e)
 	openIdRoutes.SetupRoutes()
 
 	err := e.Start(":8080")
